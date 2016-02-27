@@ -1,0 +1,10 @@
+---
+- hosts: test
+  vars:
+    dev_groups: ['unix_cloudeng']
+    sudoers:
+      - userorgroup: '%foo_bar'
+        nopassword: false
+
+  roles:
+    - { role: dev_access, sudo: true }

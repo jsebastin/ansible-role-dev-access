@@ -1,0 +1,17 @@
+---
+# tasks file for ansible-role-dev-access
+ - name: modify pam account config to support windows groups with spaces in names
+   lineinfile:
+     state: present
+     dest: /etc/pam.d/common-account
+     regexp: '^account\srequired\spam_access.so'
+     line: 'account required pam_access.so listsep=,'
+     insertbefore: '# end of pam-auth-update config'
+
+ - name: add groups for access
+   lineinfile:
+     state: present
+     dest: /etc/security/access.conf
+     line: "+ : ({{ item }}) : ALL"
+     insertbefore: '- : ALL : ALL EXCEPT LOCAL'
+   with_items: "{{ dev_groups|default([]) }}"
